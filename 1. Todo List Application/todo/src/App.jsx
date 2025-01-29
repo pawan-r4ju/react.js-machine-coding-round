@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import "./App.css";
+import TodoLIst from "./components/TodoList";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const removeElem = (index) => {
+    setTodos(
+      todos.filter((_, idx) => {
+        return idx !== index;
+      })
+    );
+  };
+  const addTodo = () => {
+    if (inputValue.trim()) {
+      setTodos([...todos, inputValue]);
+      setInputValue("");
+    }
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="flex flex-col items-center justify-center ">
+        <div className="flex items-center justify-center gap-2">
+          <input
+            type="text"
+            placeholder="enter the task"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="border rounded-md text-center"
+          />{" "}
+          <button className="border rounded-md px-2" onClick={addTodo}>
+            add task
+          </button>
+        </div>
+        <div className="w-[25%] items-center justify-center">
+          <ol className="">
+            {todos.map((element, idx) => {
+              return (
+                <li
+                  key={idx}
+                  className="border rounded-sm my-1.5 flex items-center justify-between px-2 "
+                >
+                  <span>{element}</span>{" "}
+                  <button
+                    onClick={() => removeElem(idx)}
+                    className="m-1 border px-2 rounded-md"
+                  >
+                    X
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
