@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const fetchItems = async () => {
+    setIsLoading(true);
+    // Simulate an API call
+    setTimeout(() => {
+      const newItems = Array.from({ length: 20 }, (_, index) => `Item ${index + 1 + items.length}`);
+      setItems((prevItems) => [...prevItems, ...newItems]);
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, [page]);
+
+  const handleScroll = () => {
+    if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || isLoading) {
+      return;
+    }
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isLoading]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <ul className="w-full">
+        {items.map((item, index) => (
+          <li key={index} className="border p-2 my-1">
+            {item}
+          </li>
+        ))}
+      </ul>
+      {isLoading && <p>Loading...</p>}
+    </div>
+  );
 }
 
-export default App
+export default App;
