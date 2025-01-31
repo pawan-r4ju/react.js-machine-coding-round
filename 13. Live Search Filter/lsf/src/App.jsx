@@ -28,7 +28,8 @@ function App() {
       />
       <ul className="w-1/2">
         {filteredItems.map((item, index) => (
-          <li key={index} className="border p-2 my-1">
+          <li key={index} className="border p-2 my-1"
+          onClick={()=>setSearchTerm(item)}>
             {item}
           </li>
         ))}
