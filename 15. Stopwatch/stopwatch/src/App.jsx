@@ -2,56 +2,49 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [time, setTime] = useState(0);
+  const [sec, setSec] = useState(0);
   const [minute, setMinute] = useState(0);
-  const [intervalId, setIntervalId] = useState(null);
+  const [track, setTrack] = useState(null);
 
   const startTime = () => {
-    if (intervalId !== null) return;
-    const id = setInterval(() => {
-      setTime((prevTime) => {
-        if (prevTime >= 59) {
-          setMinute((prevMinute) => prevMinute + 1);
+    if (track !== null) return;
+    const td = setInterval(() => {
+      setSec((sec) => {
+        if (sec > 59) {
+          setMinute((minute) => minute + 1);
           return 0;
         } else {
-          return prevTime + 1;
+          return sec + 1;
         }
       });
     }, 1000);
-    setIntervalId(id);
+    setTrack(td);
   };
-
   const stopTime = () => {
-    if (intervalId !== null) {
-      clearInterval(intervalId);
-      setIntervalId(null);
-    }
+    if (track === null) return;
+    clearInterval(track);
+    setTrack(null);
   };
-
   const resetTime = () => {
-    stopTime();
-    setTime(0);
-    setMinute(0);
+    setSec(0)
+    setMinute(0)
+    setTrack(null)
+
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1>
-        {minute}:{time < 10 ? `0${time}` : time}
-      </h1>
-      <br />
-      <div className="flex items-center justify-center gap-4">
-        <button onClick={startTime} className="px-4 py-2 bg-blue-500 text-white rounded">
-          Start
-        </button>
-        <button onClick={stopTime} className="px-4 py-2 bg-red-500 text-white rounded">
-          Stop
-        </button>
-        <button onClick={resetTime} className="px-4 py-2 bg-gray-500 text-white rounded">
-          Reset
-        </button>
+    <>
+      <div className="flex flex-col items-center justify-center ">
+        <h1>
+          {minute < 10 ? `0${minute}` : minute}:{sec < 10 ? `0${sec}` : sec}
+        </h1>
+        <div className="flex items-center justify-center gap-4 mt-3">
+          <button onClick={startTime}>start</button>
+          <button onClick={stopTime}>stop</button>
+          <button onClick={resetTime}>reset</button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
