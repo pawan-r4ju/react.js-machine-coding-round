@@ -10,7 +10,7 @@ function App() {
   });
 
   const handleNext = () => {
-    setCurrentStep((prevStep) => prevStep + 1);
+    setCurrentStep((prevStep) => prevStep + 1); 
   };
 
   const handlePrev = () => {
